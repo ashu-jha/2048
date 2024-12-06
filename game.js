@@ -333,7 +333,6 @@ class Game2048 {
                         
                         // Update score based on value difference
                         if (numberValue > currentValue) {
-                            // Add the difference to the score
                             this.score += (numberValue - currentValue);
                         }
                         
@@ -351,29 +350,58 @@ class Game2048 {
             }
         });
 
-        // Optional: Touch/Swipe support
+        // Improved touch support
         let touchStartX = 0;
         let touchStartY = 0;
+        let touchStartTime = 0;
+        const minSwipeDistance = 30;
+        const maxSwipeTime = 1000;
 
         this.gameBoard.addEventListener('touchstart', (e) => {
+            e.preventDefault();
             touchStartX = e.touches[0].clientX;
             touchStartY = e.touches[0].clientY;
-        });
+            touchStartTime = Date.now();
+        }, { passive: false });
+
+        this.gameBoard.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        }, { passive: false });
 
         this.gameBoard.addEventListener('touchend', (e) => {
+            e.preventDefault();
             const touchEndX = e.changedTouches[0].clientX;
             const touchEndY = e.changedTouches[0].clientY;
+            const touchEndTime = Date.now();
+
+            const swipeTime = touchEndTime - touchStartTime;
+            if (swipeTime > maxSwipeTime) return;
 
             const diffX = touchEndX - touchStartX;
             const diffY = touchEndY - touchStartY;
+            const absDiffX = Math.abs(diffX);
+            const absDiffY = Math.abs(diffY);
 
-            if (Math.abs(diffX) > Math.abs(diffY)) {
+            if (Math.max(absDiffX, absDiffY) < minSwipeDistance) return;
+
+            if (absDiffX > absDiffY) {
                 // Horizontal swipe
                 this.move(diffX > 0 ? 'ArrowRight' : 'ArrowLeft');
             } else {
                 // Vertical swipe
                 this.move(diffY > 0 ? 'ArrowDown' : 'ArrowUp');
             }
+        }, { passive: false });
+
+        // Prevent zoom on double tap
+        let lastTap = 0;
+        document.addEventListener('touchend', (e) => {
+            const currentTime = Date.now();
+            const tapLength = currentTime - lastTap;
+            if (tapLength < 500 && tapLength > 0) {
+                e.preventDefault();
+            }
+            lastTap = currentTime;
         });
     }
 }
