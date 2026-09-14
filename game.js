@@ -44,9 +44,14 @@ class Game2048 {
     }
 
     getPositionFromCoords(row, col) {
+        const isMobile = window.innerWidth <= 500;
+        const cellSize = isMobile ? 65 : 85;
+        const gap = isMobile ? 10 : 15;
+        const padding = isMobile ? 10 : 15;
+
         return {
-            x: col * 100 + 15,
-            y: row * 100 + 15
+            x: col * (cellSize + gap) + padding,
+            y: row * (cellSize + gap) + padding
         };
     }
 
@@ -308,6 +313,10 @@ class Game2048 {
     }
 
     setupEventListeners() {
+        window.addEventListener('resize', () => {
+            this.renderBoard();
+        });
+
         document.addEventListener('keydown', (e) => {
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
                 e.preventDefault();

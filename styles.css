@@ -33,13 +33,12 @@ h1 {
 
 .game-board {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 85px);
+    grid-template-rows: repeat(4, 85px);
     gap: 15px;
     background-color: #333;
     border-radius: 5px;
     padding: 15px;
-    width: 400px;
-    height: 400px;
     position: relative;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -58,6 +57,8 @@ h1 {
     font-weight: bold;
     border-radius: 5px;
     position: absolute;
+    top: 0;
+    left: 0;
     width: 85px;
     height: 85px;
     transition: transform 0.15s ease-in-out, opacity 0.15s ease-in-out;
@@ -118,10 +119,12 @@ h1 {
 /* Mobile Optimization */
 @media (max-width: 500px) {
     .game-board {
-        width: 300px;
-        height: 300px;
+        grid-template-columns: repeat(4, 65px);
+        grid-template-rows: repeat(4, 65px);
         gap: 10px;
         padding: 10px;
+        width: max-content;
+        height: max-content;
     }
 
     .grid-cell {
